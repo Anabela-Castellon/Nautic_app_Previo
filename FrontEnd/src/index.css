@@ -1,0 +1,140 @@
+@import "leaflet/dist/leaflet.css";
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Popup redondeado */
+.leaflet-popup-content-wrapper.spot-popup,
+.leaflet-popup-content-wrapper {
+  border-radius: 14px !important;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.15);
+}
+
+/* Chips blancos (píldoras) bajo cada punto */
+.leaflet-tooltip.spot-chip {
+  background: rgba(255, 255, 255, 0.95);
+  color: #0d3b66;
+  border: 1px solid rgba(13, 59, 102, 0.15);
+  border-radius: 9999px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 6px 16px rgba(13,59,102,0.12);
+}
+.leaflet-tooltip.spot-chip:before {
+  display: none;
+}
+
+/* Mini card del popup */
+.mini-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+.mini-title { font-weight: 700; font-size: 15px; color: #0d3b66; }
+.mini-chip { font-size: 12px; color: #5f6b7a; display:flex; gap:8px; align-items:center; }
+.mini-chip svg { width: 14px; height: 14px; color:#0d3b66 }
+.mini-button {
+  width: 100%; margin-top: 8px; border-radius: 10px; padding: 8px 10px;
+  font-weight: 700; font-size: 13px; color: #fff; background: #0d3b66;
+}
+.mini-button:hover { background: #124b85; }
+.mini-close { color:#95a1b0; }
+.mini-close:hover { color:#334155; }
+
+.input.validator {
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 9999px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input.validator:focus {
+  border-color: #0b2849;
+  box-shadow: 0 0 0 2px rgba(11, 40, 73, 0.15);
+}
+
+.validator-hint {
+  margin-top: -6px;
+  margin-bottom: 4px;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+body {
+  background-color: white;
+  overflow-x: hidden;
+}
+
+* ====== Crear/Editar negocio (tal cual PDF) ====== */
+.biz-card {
+  border: 1px solid #E9EFF6;
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.biz-card-title {
+  font-weight: 600;
+  color: #0b2849;
+  margin-bottom: 8px;
+  font-size: 15px;
+}
+
+.biz-input {
+  width: 100%;
+  border: 1px solid #E3ECF3;
+  background: #FFFFFF;
+  border-radius: 9999px;
+  padding: 12px 20px;
+  color: #0b2849;
+  outline: none;
+  transition: box-shadow .15s ease, border-color .15s ease;
+}
+
+.biz-input::placeholder { color: #97A3B6; }
+
+.biz-input:focus {
+  border-color: #0D3B66;
+  box-shadow: 0 0 0 3px rgba(13, 59, 102, 0.12);
+}
+
+.biz-select {
+  width: 100%;
+  border: 1px solid #E3ECF3;
+  background: #FFFFFF;
+  border-radius: 9999px;
+  padding: 12px 20px;
+  color: #0b2849;
+  outline: none;
+  appearance: none;
+  background-image: none;
+  transition: box-shadow .15s ease, border-color .15s ease;
+}
+
+.biz-select:focus {
+  border-color: #0D3B66;
+  box-shadow: 0 0 0 3px rgba(13, 59, 102, 0.12);
+}
+
+.biz-textarea {
+  width: 100%;
+  border: 1px solid #E3ECF3;
+  background: #FFFFFF;
+  border-radius: 16px;
+  padding: 14px 16px;
+  color: #0b2849;
+  outline: none;
+  resize: vertical;
+  min-height: 150px;
+  transition: box-shadow .15s ease, border-color .15s ease;
+}
+.biz-textarea::placeholder { color: #97A3B6; }
+.biz-textarea:focus {
+  border-color: #0D3B66;
+  box-shadow: 0 0 0 3px rgba(13, 59, 102, 0.12);
+}

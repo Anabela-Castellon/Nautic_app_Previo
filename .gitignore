@@ -1,0 +1,13 @@
+# Git ignore file for Nautic_app
+# Typical Python ignores
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+env/
+
+# Node frontend
+node_modules/
+dist/
+.vscode/
+.idea
