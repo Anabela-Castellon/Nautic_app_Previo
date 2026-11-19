@@ -5,6 +5,7 @@ import {
   getOwnerProfile,
   listMyBusinesses,
   updateMyBusiness,
+  setMyBusinessActive,
   OwnerProfile,
 } from "../api/businessOwner";
 
@@ -36,6 +37,7 @@ export default function BusinessEdit() {
   const [profile, setProfile] = useState<OwnerProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [estado, setEstado] = useState<"activo" | "inactivo" | "pendiente">("activo");
 
   useEffect(() => {
     const ownerId = localStorage.getItem("ownerId");
@@ -53,6 +55,7 @@ export default function BusinessEdit() {
         ]);
 
         setProfile(profileData);
+        setEstado(businessData.estado);
 
         if ((businessData.estado || "").toLowerCase() === "pendiente") {
           setError("Tu negocio aún está pendiente de aprobación.");
@@ -117,6 +120,20 @@ export default function BusinessEdit() {
     } catch (err) {
       console.error("Error al guardar:", err);
       alert("No se pudo guardar el negocio.");
+    }
+  };
+
+  const toggleActive = async () => {
+    const activar = estado === "inactivo";
+    const msg = activar
+      ? "¿Reactivar tu negocio? Volverá a verse en el mapa."
+      : "¿Pausar tu negocio? Dejará de verse en el mapa hasta que lo reactives.";
+    if (!confirm(msg)) return;
+    try {
+      await setMyBusinessActive(activar);
+      setEstado(activar ? "activo" : "inactivo");
+    } catch (err) {
+      alert("No se pudo cambiar el estado del negocio.");
     }
   };
 
@@ -199,6 +216,30 @@ export default function BusinessEdit() {
           {/* Panel negocio */}
           <section className="flex-[1.5] bg-white border border-[#E9EFF6] rounded-[16px] shadow-md px-6 md:px-10 py-8">
             <h2 className="text-2xl font-bold text-[#0b2849] mb-4">Datos del negocio</h2>
+
+            {/* Estado del negocio: pausar / reactivar */}
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#E9EFF6] bg-[#F7FAFC] px-4 py-3">
+              <div className="flex items-center gap-3 text-sm text-gray-700">
+                <span className="font-semibold text-[#0b2849]">Estado:</span>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    estado === "activo" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-600"
+                  }`}
+                >
+                  {estado === "activo" ? "Activo" : "Pausado"}
+                </span>
+                <span className="text-xs text-gray-500">
+                  {estado === "activo" ? "Se ve en el mapa." : "No se ve en el mapa."}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={toggleActive}
+                className="px-4 py-2 rounded-full border border-[#0b2849]/40 text-[#0b2849] text-sm font-semibold hover:bg-[#0b2849] hover:text-white transition-colors"
+              >
+                {estado === "activo" ? "Pausar negocio" : "Reactivar negocio"}
+              </button>
+            </div>
             <form onSubmit={onSave} className="space-y-8">
               <div className="grid grid-cols-1 gap-3">
                 <input

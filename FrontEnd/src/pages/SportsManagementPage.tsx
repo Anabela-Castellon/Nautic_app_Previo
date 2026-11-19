@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AdminLayout from "../components/AdminLayout";
-import { listSports, toggleSportStatus, uploadSportIcon, SportInfo } from "../api/admin";
+import { listSports, toggleSportStatus, uploadSportIcon, deleteSport, SportInfo } from "../api/admin";
 
 export default function SportsManagementPage() {
   const [sports, setSports] = useState<SportInfo[]>([]);
@@ -77,6 +77,30 @@ export default function SportsManagementPage() {
       fetchSports();
     } catch (err) {
       alert("No se pudo actualizar el estado.");
+    }
+  };
+
+  const handleDelete = async (sport: SportInfo) => {
+    if (
+      !confirm(
+        `¿Eliminar el deporte "${sport.nombre}"?\n\nSe borrarán también sus condiciones de pronóstico, sus puntajes y su ícono. Esta acción no se puede deshacer.`
+      )
+    ) {
+      return;
+    }
+    try {
+      await deleteSport(sport.id);
+      // Si tenía un ícono elegido sin guardar, se descarta
+      setPendingIcons((prev) => {
+        if (!prev[sport.id]) return prev;
+        URL.revokeObjectURL(prev[sport.id].preview);
+        const rest = { ...prev };
+        delete rest[sport.id];
+        return rest;
+      });
+      fetchSports();
+    } catch (err) {
+      alert("No se pudo eliminar el deporte.");
     }
   };
 
@@ -186,12 +210,20 @@ export default function SportsManagementPage() {
                   )}
                 </td>
                 <td className="px-6 py-4">
-                  <button
-                    onClick={() => handleToggle(sport.id)}
-                    className="bg-gray-100 text-gray-700 font-semibold px-4 py-2 rounded-md hover:bg-gray-200 transition text-sm"
-                  >
-                    {sport.activo ? "Desactivar" : "Activar"}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleToggle(sport.id)}
+                      className="bg-gray-100 text-gray-700 font-semibold px-4 py-2 rounded-md hover:bg-gray-200 transition text-sm"
+                    >
+                      {sport.activo ? "Desactivar" : "Activar"}
+                    </button>
+                    <button
+                      onClick={() => handleDelete(sport)}
+                      className="bg-red-50 text-red-700 font-semibold px-4 py-2 rounded-md hover:bg-red-100 transition text-sm"
+                    >
+                      Eliminar
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

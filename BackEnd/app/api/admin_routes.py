@@ -6,7 +6,9 @@ from app.core.database import get_db
 from app.models.models import (
     Spot,
     Deporte,
+    DeporteSpot,
     DeporteVariable,
+    NegocioDeporte,
     Negocio,
     EstadoNegocio,
     Usuario,
@@ -222,6 +224,30 @@ def cambiar_estado_deporte(deporte_id: int, db: Session = Depends(get_db)):
     deporte.activo = not deporte.activo
     db.commit()
     return {"mensaje": f"Deporte {'activado' if deporte.activo else 'desactivado'} correctamente"}
+
+@router.delete("/deportes/{deporte_id}")
+def eliminar_deporte(deporte_id: int, db: Session = Depends(get_db)):
+    """Elimina un deporte y todo lo que depende de él (puntajes, variables, vínculos con negocios e icono)."""
+    import os
+    from app.api.deporte_routes import icon_path
+
+    deporte = db.query(Deporte).filter(Deporte.id == deporte_id).first()
+    if not deporte:
+        raise HTTPException(status_code=404, detail="Deporte no encontrado")
+
+    nombre = deporte.nombre
+    db.query(DeporteSpot).filter(DeporteSpot.id_deporte == deporte_id).delete()
+    db.query(DeporteVariable).filter(DeporteVariable.id_deporte == deporte_id).delete()
+    db.query(NegocioDeporte).filter(NegocioDeporte.id_deporte == deporte_id).delete()
+    db.query(Deporte).filter(Deporte.id == deporte_id).delete()
+    db.commit()
+
+    # Se borra también el icono PNG, si tenía uno
+    path = icon_path(deporte_id)
+    if os.path.exists(path):
+        os.remove(path)
+
+    return {"mensaje": f"Deporte {nombre} eliminado correctamente"}
 
 # ------------------------------------------------------------
 # 🔹 Negocios pendientes / aprobación

@@ -158,6 +158,13 @@ export async function toggleSportStatus(id_deporte: number) {
   );
 }
 
+/**
+ * Elimina un deporte de forma permanente.
+ */
+export async function deleteSport(id_deporte: number) {
+  return apiDELETE<{ mensaje: string }>(`/admin/deportes/${id_deporte}`);
+}
+
 export type SpotAdminInfo = {
   id: number;
   codigo: string;

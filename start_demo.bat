@@ -4,7 +4,7 @@ set "ROOT=%~dp0"
 for %%I in ("%ROOT%..\Nautic_app") do set "ORIG=%%~fI"
 
 echo ============================================
-echo   NAUTIC - MODO DEMO - sin base de datos
+echo   NAUTIC - MODO DEMO - SQLite local, sin Postgres ni APIs
 echo ============================================
 
 REM ================= BACKEND =================

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiGET } from "../api/client";
+import { setMyBusinessActive } from "../api/businessOwner";
 
 type Business = {
   nombre_fantasia: string;
@@ -53,6 +54,21 @@ export default function BusinessPanel() {
     loadBusiness();
   }, [navigate]);
 
+  const toggleActive = async () => {
+    if (!business) return;
+    const activar = business.estado === "inactivo";
+    const msg = activar
+      ? "¿Reactivar tu negocio? Volverá a verse en el mapa."
+      : "¿Pausar tu negocio? Dejará de verse en el mapa hasta que lo reactives.";
+    if (!confirm(msg)) return;
+    try {
+      await setMyBusinessActive(activar);
+      setBusiness({ ...business, estado: activar ? "activo" : "inactivo" });
+    } catch (e) {
+      alert("No se pudo cambiar el estado del negocio.");
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-[calc(100vh-64px)] text-gray-500">
@@ -79,6 +95,26 @@ export default function BusinessPanel() {
             {business.nombre_fantasia}
           </h1>
           <p className="text-gray-600">{business.rubro}</p>
+
+          {business.estado !== "pendiente" && (
+            <div className="mt-3 flex items-center justify-center gap-3">
+              <span
+                className={`px-3 py-1 rounded-full text-xs font-medium ${
+                  business.estado === "activo"
+                    ? "bg-green-100 text-green-700"
+                    : "bg-gray-100 text-gray-600"
+                }`}
+              >
+                {business.estado === "activo" ? "Activo" : "Pausado"}
+              </span>
+              <button
+                onClick={toggleActive}
+                className="text-sm font-semibold text-[#0b2849] underline hover:text-[#123b69]"
+              >
+                {business.estado === "activo" ? "Pausar negocio" : "Reactivar negocio"}
+              </button>
+            </div>
+          )}
 
           {pending && (
             <div className="mt-4 mb-6 rounded-md border border-yellow-300 bg-yellow-50 p-3 text-sm text-yellow-800">

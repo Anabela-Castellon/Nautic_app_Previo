@@ -214,6 +214,10 @@ def activate_business(user: Usuario = Depends(get_current_user), db: Session = D
     if not negocio:
         raise HTTPException(status_code=404, detail="Negocio no encontrado")
 
+    # Un negocio pendiente solo lo habilita el administrador, no su dueño
+    if negocio.estado == EstadoNegocio.pendiente:
+        raise HTTPException(status_code=400, detail="Tu negocio está pendiente de aprobación.")
+
     negocio.estado = EstadoNegocio.activo
     db.commit()
     return {"message": "Negocio activado correctamente"}
@@ -226,6 +230,9 @@ def deactivate_business(user: Usuario = Depends(get_current_user), db: Session =
     negocio = db.query(Negocio).filter(Negocio.id_dueno == user.id).first()
     if not negocio:
         raise HTTPException(status_code=404, detail="Negocio no encontrado")
+
+    if negocio.estado == EstadoNegocio.pendiente:
+        raise HTTPException(status_code=400, detail="Tu negocio está pendiente de aprobación.")
 
     negocio.estado = EstadoNegocio.inactivo
     db.commit()

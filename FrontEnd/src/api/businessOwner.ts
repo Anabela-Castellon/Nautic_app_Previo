@@ -103,6 +103,14 @@ export async function updateMyBusiness(payload: {
 }
 
 
+// 🟩 Pausar o reactivar el negocio (deja de verse / vuelve a verse en el mapa)
+export async function setMyBusinessActive(activo: boolean) {
+  return apiFormPUT<{ message: string }>(
+    activo ? "/business_owner/activate_business" : "/business_owner/deactivate_business",
+    {}
+  );
+}
+
 // 🟦 Obtener lista de deportes
 export async function listSports() {
   return apiGET<{ id: number; nombre: string; codigo: string; descripcion: string }[]>(
