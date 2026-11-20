@@ -25,7 +25,7 @@ if errorlevel 1 goto :error
 venv\Scripts\python.exe -c "import fastapi, uvicorn, sqlalchemy, itsdangerous, dotenv, requests, arrow" 2>nul
 if not errorlevel 1 goto :deps_ok
 echo [1/4] Instalando dependencias del backend - requiere internet...
-venv\Scripts\python.exe -m pip install -r requirements.txt
+venv\Scripts\python.exe -m pip install -r requirements_demo.txt
 if errorlevel 1 goto :error
 :deps_ok
 

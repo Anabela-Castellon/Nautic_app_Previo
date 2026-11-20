@@ -57,6 +57,25 @@ cd BackEnd
 venv\Scripts\python.exe -m app.demo.seed_demo --reset
 ```
 
+### Instalación manual (Mac, Linux o si falla el `.bat`)
+
+```
+# Backend (terminal 1)
+cd BackEnd
+python -m venv venv
+venv\Scripts\activate            # en Mac/Linux: source venv/bin/activate
+pip install -r requirements_demo.txt
+python -m app.demo.seed_demo
+python -m uvicorn app.main:app --port 8000
+
+# Frontend (terminal 2)
+cd FrontEnd
+npm install
+npm run dev
+```
+
+Después abrí <http://localhost:5173>. El mapa de fondo (OpenStreetMap) se descarga de internet, así que necesita conexión.
+
 ### Cuentas de prueba
 
 | Rol | Email | Contraseña |
